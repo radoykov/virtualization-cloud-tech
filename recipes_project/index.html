@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Рецепти</title>
+</head>
+<body>
+  <h1>Добави рецепта</h1>
+
+  <input id="title" placeholder="Име на рецепта"><br><br>
+  <textarea id="ingredients" placeholder="Съставки"></textarea><br><br>
+  <textarea id="instructions" placeholder="Начин на приготвяне"></textarea><br><br>
+  <button onclick="saveRecipe()">Запиши</button>
+
+  <h2>Всички рецепти</h2>
+  <ul id="recipes"></ul>
+
+  <script>
+    async function saveRecipe() {
+      const recipe = {
+        title: title.value,
+        ingredients: ingredients.value,
+        instructions: instructions.value
+      };
+
+      await fetch("http://localhost:3000/recipes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(recipe)
+      });
+
+      title.value = "";
+      ingredients.value = "";
+      instructions.value = "";
+
+      loadRecipes();
+    }
+
+    async function loadRecipes() {
+      const res = await fetch("http://localhost:3000/recipes");
+      const data = await res.json();
+
+      recipes.innerHTML = "";
+
+      data.forEach(r => {
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+          <strong>${r.title}</strong><br>
+          <em>Съставки:</em> ${r.ingredients}<br>
+          <em>Начин на приготвяне:</em> ${r.instructions}
+          <hr>
+        `;
+
+        recipes.appendChild(li);
+      });
+    }
+
+    loadRecipes();
+  </script>
+</body>
+</html>
