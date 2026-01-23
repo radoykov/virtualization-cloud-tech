@@ -23,7 +23,7 @@
         instructions: instructions.value
       };
 
-      await fetch("http://localhost:3000/recipes", {
+      await fetch("http://backend-service:3000/recipes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(recipe)
@@ -37,7 +37,7 @@
     }
 
     async function loadRecipes() {
-      const res = await fetch("http://localhost:3000/recipes");
+      const res = await fetch("http://backend-service:3000/recipes");
       const data = await res.json();
 
       recipes.innerHTML = "";
